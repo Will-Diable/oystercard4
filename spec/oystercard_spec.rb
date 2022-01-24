@@ -41,7 +41,22 @@ describe Oystercard do
 
   it 'can touch a user out' do
     card = Oystercard.new
+    card.top_up(20)
     expect(card.touch_out).to eq false
   end
 
+  it 'has a minimum balance of £1' do
+    card = Oystercard.new
+  
+    expect{card.deduct(1)}.to raise_error "insufficient funds"
+  end
+
+
+  it 'can deduct money on touch out' do
+    card = Oystercard.new
+    subject.top_up(10)
+    card.touch_in
+
+    expect{subject.touch_out}.to change {subject.balance}.by(-Oystercard::MIN_BALANCE)
+  end
 end
