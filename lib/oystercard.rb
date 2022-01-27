@@ -5,6 +5,7 @@ class Oystercard
   MIN_BALANCE = 1
   attr_reader :in_journey
   attr_reader :entry_station
+  attr_reader :exit_station
   attr_reader :journeys
 
   def initialize
@@ -26,8 +27,10 @@ class Oystercard
     @entry_station = station
   end
 
-  def touch_out
+  def touch_out(station)
     deduct(MIN_BALANCE)
+    @exit_station = station
+    @journeys[@entry_station] = @exit_station
     @entry_station = nil
     "Thank you for riding with us today"
   end
@@ -38,18 +41,6 @@ class Oystercard
     @balance -= amount
     "#{amount} deducted from account"
   end
-
-  # def add_entry(day, note)
-  #   fail "Unlock diary first" if @locked
-  #   @diary[day] = note
-  #   return "Entry added successfully"
-  # end
-
-  # def get_entry(day)
-  #   fail "Unlock diary first" if @locked
-  #   @diary[day]
-  # end
-  
   
 end
 
