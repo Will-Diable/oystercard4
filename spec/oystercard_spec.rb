@@ -2,9 +2,10 @@ require 'oystercard'
 
 describe Oystercard do
   
-  let(:entry_station){ double 'Preston' }
+  let(:entry_station){ double :entry_station }
+  let(:exit_station){ double :exit_station }
 
-  # This also works: let(:entry_station){ double :entry_station }
+  # This also works: let(:entry_station){ double "Preston" }
   
   card = Oystercard.new
   it {is_expected.to respond_to :balance}
@@ -34,21 +35,21 @@ describe Oystercard do
     expect(subject.touch_in(entry_station)).to eq entry_station
   end
 
-  # it 'can touch a user out' do
-  #   subject.top_up(20)
-  #   expect(subject.touch_out).to eq "20 deducted from account"
-  # end
+  it 'can touch a user out' do
+    subject.top_up(20)
+    expect(subject.touch_out(exit_station)).to eq "Thank you for riding with us today"
+  end
 
-  # it 'has a minimum balance of £1' do
-  #   expect{subject.touch_out}.to raise_error "insufficient funds"
-  # end
+  it 'has a minimum balance of £1' do
+    expect{subject.touch_out(exit_station)}.to raise_error "insufficient funds"
+  end
 
 
-  # it 'can deduct money on touch out' do
-  #   subject.top_up(10)
-  #   subject.touch_in(entry_station)
-  #   expect{subject.touch_out}.to change {subject.balance}.by(-Oystercard::MIN_BALANCE)
-  # end
+  it 'can deduct money on touch out' do
+    subject.top_up(10)
+    subject.touch_in(entry_station)
+    expect{subject.touch_out(exit_station)}.to change {subject.balance}.by(-Oystercard::MIN_BALANCE)
+  end
 
   it 'saves entry station' do
     subject.touch_in(entry_station)
@@ -61,9 +62,9 @@ describe Oystercard do
 
   it 'pushes journey to journeys variable on touch out' do
     subject.top_up(10)
-    subject.touch_in("Preston")
-    subject.touch_out("Manchester")
-    expect(subject.journeys).to eq "Preston" => "Manchester"
+    subject.touch_in(entry_station)
+    subject.touch_out(exit_station)
+    expect(subject.journeys).to eq entry_station => exit_station
   end
 
 end
