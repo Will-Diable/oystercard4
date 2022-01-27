@@ -40,8 +40,9 @@ class Oystercard
   
 end
 
-# card = Oystercard.new
-# card.top_up(10)
-# card.touch_in("Preston")
-# p card.entry_station
+p card = Oystercard.new
+p card.top_up(10)
+p card.touch_in("Preston")
+p card.entry_station
+
 
